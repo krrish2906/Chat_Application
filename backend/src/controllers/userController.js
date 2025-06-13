@@ -81,3 +81,42 @@ export const logout = (req, res) => {
         });
     }
 }
+
+export const updateProfilePic = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { profilePic } = req.body;
+        const user = await userService.updateProfilePic(userId, { profilePic });
+        return res.status(200).json({
+            data: user,
+            success: true,
+            message: 'Profile picture updated successfully',
+            error: null
+        });
+    } catch (error) {
+        return res.status(500).json({
+            data: {},
+            success: false,
+            message: 'Failed to update profile picture',
+            error: error.message
+        });
+    }
+}
+
+export const checkAuth = (req, res) => {
+    try {
+        return res.status(200).json({
+            data: req.user,
+            success: true,
+            message: 'User Authenticated',
+            error: null
+        });
+    } catch (error) {
+        return res.status(500).json({
+            data: {},
+            success: false,
+            message: 'Failed to authenticate user',
+            error: error.message
+        });
+    }
+}

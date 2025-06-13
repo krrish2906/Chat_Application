@@ -1,6 +1,7 @@
 import UserRepository from "../repository/UserRepository.js";
 import { hashPassword, generateToken, comparePassword } from '../utils/passwordUtils.js';
 import { AuthenticationError, NotFoundError } from '../utils/errors.js'
+import cloudinary from "../config/cloudinaryConfig.js";
 
 class UserService {
     constructor() {
@@ -99,6 +100,15 @@ class UserService {
     async updateProfilePic(userId, data) {
         try {
             const newProfilePic = data.profilePic;
+            const response = await cloudinary.uploader.upload(newProfilePic);
+            if (!response || !response.secure_url) {
+                throw new Error("Image upload failed");
+            }
+
+            const user = await this.userRepository.update(userId, {
+                profilePic: response.secure_url
+            }, { new: true });
+            return user;
         } catch (error) {
             throw error;
         }

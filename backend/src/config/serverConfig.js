@@ -6,4 +6,7 @@ export const serverConfig = {
     MONGODB_URI: process.env.MONGODB_URI,
     SALT_ROUNDS: process.env.SALT_ROUNDS,
     JWT_SECRET: process.env.JWT_SECRET,
+    CLOUDINARY_CLOUDNAME: process.env.CLOUDINARY_CLOUDNAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET
 }
