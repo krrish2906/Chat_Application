@@ -8,10 +8,21 @@ class UserRepository extends CrudRepository {
 
     async findByEmail(userEmail) {
         try {
-            const document = await this.model.findOne({ email: userEmail });
+            const document = await User.findOne({ email: userEmail });
             return document;
         } catch (error) {
             throw new Error(`Error finding user by email: ${error.message}`);
+        }
+    }
+
+    async findAllUsers(userId) {
+        try {
+            const users = await User.find({
+                _id: { $ne: userId }
+            }).select('-password');
+            return users;
+        } catch (error) {
+            throw error;
         }
     }
 }

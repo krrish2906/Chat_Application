@@ -120,3 +120,23 @@ export const checkAuth = (req, res) => {
         });
     }
 }
+
+export const findUsersforSidebar = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const users = await userService.findAllUsers(userId);
+        return res.status(200).json({
+            data: users,
+            success: true,
+            message: 'Successfully fetched all users',
+            error: null
+        });
+    } catch (error) {
+        return res.status(500).json({
+            data: {},
+            success: false,
+            message: 'Failed to fetch users',
+            error: error.message
+        });
+    }
+}

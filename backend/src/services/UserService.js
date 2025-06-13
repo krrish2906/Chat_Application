@@ -113,6 +113,15 @@ class UserService {
             throw error;
         }
     }
+
+    async findAllUsers(userId) {
+        try {
+            const users = await this.userRepository.findAllUsers(userId);
+            return users;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default UserService;
