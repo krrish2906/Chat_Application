@@ -23,7 +23,7 @@ class MessageService {
                 const base64String = messageData.image.buffer.toString('base64');
                 const dataURI = `data:${messageData.image.mimetype};base64,${base64String}`;
                 const response = await cloudinary.uploader.upload(dataURI, {
-                    folder: 'chat/images'
+                    folder: 'ChatApp/images'
                 });
                 if (!response || !response.secure_url) {
                     throw new Error("Image upload failed");
