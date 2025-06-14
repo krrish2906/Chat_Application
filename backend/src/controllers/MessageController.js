@@ -21,3 +21,28 @@ export const getChatMessages = async (req, res) => {
         });
     }
 }
+
+export const sendMessage = async (req, res) => {
+    try {
+        const messageData = {
+            senderId: req.user.userId,
+            receiverId: req.params.id,
+            text: req.body.text,
+            image: req.file
+        }
+        const message = await messageService.sendMessage(messageData);
+        return res.status(200).json({
+            data: message,
+            success: true,
+            message: 'Successfully sent the message',
+            error: null
+        });
+    } catch (error) {
+        return res.status(500).json({
+            data: {},
+            success: false,
+            message: 'Failed to send the message',
+            error: error.message
+        });
+    }
+}

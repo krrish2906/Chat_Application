@@ -99,8 +99,11 @@ class UserService {
 
     async updateProfilePic(userId, data) {
         try {
-            const newProfilePic = data.profilePic;
-            const response = await cloudinary.uploader.upload(newProfilePic);
+            const base64String = data.buffer.toString('base64');
+            const dataURI = `data:${data.mimetype};base64,${base64String}`;
+            const response = await cloudinary.uploader.upload(dataURI, {
+                folder: 'chat/profilePic'
+            });
             if (!response || !response.secure_url) {
                 throw new Error("Image upload failed");
             }

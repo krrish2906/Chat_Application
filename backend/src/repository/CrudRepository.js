@@ -34,7 +34,7 @@ class CrudRepository {
 
     async update(id, data) {
         try {
-            const updatedDocument = await this.model.findByIdAndUpdate(id, data, { new: true });
+            const updatedDocument = await this.model.findByIdAndUpdate(id, data, { new: true }).select('-password');
             return updatedDocument;
         } catch (error) {
             throw new Error(`Error updating document with ID ${id}: ${error.message}`);

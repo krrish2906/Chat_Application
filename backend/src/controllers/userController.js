@@ -5,7 +5,7 @@ export const signup = async (req, res) => {
     try {
         const user = await userService.createUser(req.body);
         res.cookie('jwt', user.token, {
-            maxAge: 1 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: true,
             sameSite: 'strict',
             secure: process.env.NODE_ENV !== 'development'
@@ -30,7 +30,7 @@ export const login = async (req, res) => {
     try {
         const user = await userService.signin(req.body);
         res.cookie('jwt', user.token, {
-            maxAge: 1 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: true,
             sameSite: 'strict',
             secure: process.env.NODE_ENV !== 'development'
@@ -85,8 +85,8 @@ export const logout = (req, res) => {
 export const updateProfilePic = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { profilePic } = req.body;
-        const user = await userService.updateProfilePic(userId, { profilePic });
+        const image = req.file;
+        const user = await userService.updateProfilePic(userId, image);
         return res.status(200).json({
             data: user,
             success: true,
