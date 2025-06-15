@@ -6,7 +6,7 @@ const connectDB = async () => {
         mongoose.connection.on('connected', () => {
             console.log("MongoDB connected successfully");
         })
-        await mongoose.connect(`${serverConfig.MONGODB_URI}/ChatApplication`)
+        await mongoose.connect(`${serverConfig.MONGODB_URI}`)
     } catch (error) {
         console.log("Error connecting MongoDB: ", error)
     }
