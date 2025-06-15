@@ -3,7 +3,7 @@ const router = express.Router();
 
 // User Middlewares and Controllers:-
 import { singleUploader, multiUploader } from '../../middlewares/MulterMiddleware.js';
-import { validateUserInfo, validateUserLoginInfo, isAuthenticated } from '../../middlewares/UserMiddleware.js'
+import { validateUserInfo, validateUserLoginInfo, isAuthenticated } from '../../middlewares/userMiddleware.js'
 import { signup, login, logout, updateProfilePic, checkAuth,
     findUsersforSidebar, fetchUser } from '../../controllers/UserController.js';
 
