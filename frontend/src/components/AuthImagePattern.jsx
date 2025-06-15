@@ -9,7 +9,7 @@ const AuthImagePattern = ({ title, subtitle }) => {
                                 key={i}
                                 className={`size-35 aspect-square rounded-2xl bg-primary/10 ${ i % 2 === 0 ? "animate-pulse" : "" }
                                 ${ i % 2 !== 0 ? "animate-pulse" : "" }`}
-                                style={{ animationDelay: i % 2 !== 0 ? "0.5s" : "0.125s" }}
+                                style={{ animationDelay: i % 2 !== 0 ? "0.6s" : "0.1s" }}
                             />
                         ))
                     }

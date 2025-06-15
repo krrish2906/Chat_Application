@@ -8,6 +8,7 @@ export const useAuthStore = create((set) => ({
     isLoggingIn: false,
     isUpdatingProfile: false,
     isCheckingAuth: true,
+    onlineUsers: [],
 
     checkAuth: async () => {
         try {
@@ -90,6 +91,7 @@ export const useAuthStore = create((set) => ({
         try {
             var updateProfileData = new FormData();
             updateProfileData.append('image', imageFile);
+            
             const { data } = await axiosInstance.patch('/user/profile/update', updateProfileData, {
                 validateStatus: function (status) {
                     return status < 500; 
