@@ -7,9 +7,9 @@ import cors from 'cors';
 import connectDB from './config/dbConfig.js';
 import { serverConfig } from './config/serverConfig.js';
 import ApiRoutes from './routes/index.js'
+import { app, server } from './lib/socket.js'; 
 
-const app = express();
-
+// Middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
@@ -23,8 +23,7 @@ app.get('/', (req, res) => {
     res.send('Chat Application Backend');
 })
 
-
-app.listen(serverConfig.PORT, () => {
+server.listen(serverConfig.PORT, () => {
     console.log(`\nServer is listening on http://localhost:${serverConfig.PORT}`);
     connectDB();
 })
