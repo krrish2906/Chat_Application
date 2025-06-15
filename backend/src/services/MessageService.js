@@ -1,6 +1,7 @@
 import MessageRepository from "../repository/MessageRepository.js";
 import cloudinary from "../config/cloudinaryConfig.js";
 import fs from 'fs';
+import { getRecieverSocketId, io } from "../lib/socket.js";
 
 class MessageService {
     constructor() {
@@ -32,7 +33,13 @@ class MessageService {
             }
 
             const message = await this.messageRepository.create(messageData);
-            // Socket.io implementation
+
+            // Socket.io implementation:-
+            const receiverSocketId = getRecieverSocketId(message.receiverId);
+            if(receiverSocketId) {
+                io.to(receiverSocketId).emit("newMessage", message);
+            }
+
             return messageData;
         } catch (error) {
             throw error;

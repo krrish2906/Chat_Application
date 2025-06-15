@@ -7,17 +7,22 @@ import { useAuthStore } from '../store/useAuthStore';
 import Moment from 'moment';
 
 function ChatContainer() {
-    const { messages, isMessagesLoading, getMessages, selectedUser } = useChatStore();
+    const {
+        messages, isMessagesLoading, getMessages, selectedUser,
+        subscribeToMessage, unsubscribeFromMessages
+    } = useChatStore();
     const { authUser } = useAuthStore();
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
         getMessages(selectedUser._id);
-    }, [selectedUser, getMessages]);
+        subscribeToMessage();
+        return () => unsubscribeFromMessages();
+    }, [selectedUser, getMessages, subscribeToMessage, unsubscribeFromMessages]);
 
     useEffect(() => {
-        if (messagesEndRef.current) {
-          messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+        if (messagesEndRef.current && messages) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
       
