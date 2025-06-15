@@ -5,7 +5,7 @@ const router = express.Router();
 import { singleUploader, multiUploader } from '../../middlewares/MulterMiddleware.js';
 import { validateUserInfo, validateUserLoginInfo, isAuthenticated } from '../../middlewares/userMiddleware.js'
 import { signup, login, logout, updateProfilePic, checkAuth,
-    findUsersforSidebar, fetchUser } from '../../controllers/UserController.js';
+    findUsersforSidebar, fetchUser } from '../../controllers/userController.js';
 
 // User Routes:-
 router.post('/user/signup', validateUserInfo, signup);
