@@ -104,6 +104,3 @@ npm start
 ✅ Online user status tracking  
 
 ---
-
-## 📎 Links
-- **Live Demo:** https://chat-application-27wi.onrender.com
