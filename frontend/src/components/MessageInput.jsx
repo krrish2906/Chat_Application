@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useChatStore } from '../store/useChatStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { Image, Send, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -8,8 +9,10 @@ function MessageInput() {
     const [imagePreview, setImagePreview] = useState(null);
     const [imageFile, setImageFile] = useState(null);
     const fileInputRef = useRef(null);
+    const typingTimeoutRef = useRef(null);
 
-    const { sendMessage } = useChatStore();
+    const { sendMessage, selectedUser } = useChatStore();
+    const { socket } = useAuthStore();
 
     const handleImage = async (event) => {
         const file = event.target.files[0]
@@ -30,6 +33,20 @@ function MessageInput() {
         if(fileInputRef.current) fileInputRef.current.value = "";
     }
 
+    const handleTyping = (e) => {
+        setText(e.target.value);
+        
+        if (socket && selectedUser) {
+            socket.emit("typing_start", { receiverId: selectedUser._id });
+
+            if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+            typingTimeoutRef.current = setTimeout(() => {
+                socket.emit("typing_stop", { receiverId: selectedUser._id });
+            }, 2000);
+        }
+    }
+
     const handleSendMessage = async (event) => {
         event.preventDefault();
         if(!text.trim() && !imagePreview) return;
@@ -39,6 +56,12 @@ function MessageInput() {
                 text: text.trim(),
                 imageFile
             });
+            
+            // Stop typing indicator explicitly
+            if (socket && selectedUser) {
+                if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+                socket.emit("typing_stop", { receiverId: selectedUser._id });
+            }
 
             setText("");
             setImageFile(null);
@@ -79,7 +102,7 @@ function MessageInput() {
                         placeholder='Type a message...'
                         className='w-full input input-bordered rounded-lg input-sm sm:input-md'
                         value={text}
-                        onChange={(e) => setText(e.target.value)} 
+                        onChange={handleTyping} 
                     />
                     <input
                         type="file"

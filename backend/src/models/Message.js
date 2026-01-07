@@ -9,14 +9,36 @@ const messageSchema = new mongoose.Schema({
     receiverId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
+    },
+    groupId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Group',
+        required: false
     },
     text: {
         type: String
     },
     image: {
         type: String
-    }
+    },
+    status: {
+        type: String,
+        enum: ['sent', 'delivered', 'seen'],
+        default: 'sent'
+    },
+    reactions: [
+        {
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            emoji: {
+                type: String,
+                required: true
+            }
+        }
+    ]
 }, {
     timestamps: true
 });

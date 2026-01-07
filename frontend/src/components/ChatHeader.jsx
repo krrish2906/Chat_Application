@@ -21,7 +21,9 @@ function ChatHeader() {
                         <h3 className='font-medium'>{ selectedUser.fullname }</h3>
                         <p className='text-sm text-base-content/70'>
                             {
-                                onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"
+                                selectedUser.isGroup
+                                ? `${selectedUser.members?.length || 0} members`
+                                : (onlineUsers.includes(selectedUser._id) ? "Online" : "Offline")
                             }
                         </p>
                     </div>

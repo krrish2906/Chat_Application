@@ -1,28 +1,52 @@
 import React, { useEffect, useState } from 'react'
 import { useChatStore } from '../store/useChatStore'
 import SidebarSkeleton from './skeletons/SidebarSkeleton';
-import { Users } from 'lucide-react';
+import { Users, Plus, MessageSquarePlus } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
+import CreateGroupModal from './CreateGroupModal';
+import NewChatModal from './NewChatModal';
 
 function Sidebar() {
-    const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
+    const { getSidebarData, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+    const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+    const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
     const { onlineUsers } = useAuthStore();
 
     useEffect(() => {
-        getUsers();
-    }, [getUsers]);
+        getSidebarData();
+    }, [getSidebarData]);
 
-    const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
+    const filteredUsers = showOnlineOnly 
+        ? users.filter(user => user.isGroup || onlineUsers.includes(user._id)) 
+        : users;
 
     if(isUsersLoading) return <SidebarSkeleton />
 
     return (
         <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>
             <div className='border-b border-base-300 w-full p-5'>
-                <div className='flex items-center gap-2'>
-                    <Users className='size-6' />
-                    <span className='font-medium hidden lg:block'>Contacts</span>
+                <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-2'>
+                        <Users className='size-6' />
+                        <span className='font-medium hidden lg:block'>Chats</span>
+                    </div>
+                    <div className='flex items-center gap-1'>
+                        <button 
+                            onClick={() => setIsNewChatModalOpen(true)}
+                            className='btn btn-circle btn-sm btn-ghost hover:bg-base-200'
+                            title="New Chat"
+                        >
+                            <MessageSquarePlus className='size-5' />
+                        </button>
+                        <button 
+                            onClick={() => setIsGroupModalOpen(true)}
+                            className='btn btn-circle btn-sm btn-ghost hover:bg-base-200'
+                            title="Create Group"
+                        >
+                            <Plus className='size-5' />
+                        </button>
+                    </div>
                 </div>
                 
                 <div className='mt-3 hidden lg:flex items-center gap-2'>
@@ -52,17 +76,20 @@ function Sidebar() {
                                 <img src={user.profilePic || "/avatar.png"} alt={user.fullname}
                                 className='size-12 object-cover rounded-full' />
                                 {
-                                    onlineUsers.includes(user._id) && (
+                                    !user.isGroup && onlineUsers.includes(user._id) && (
                                         <span className='absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900'>
                                         </span>
                                     )
                                 }
                             </div>
 
-                            <div className='hidden lg:block text-left min-w-0'>
+                            <div className='hidden lg:block text-left min-w-0 flex-1'>
                                 <div className='font-medium truncate'> { user.fullname } </div>
-                                <div className='text-sm text-zinc-400'>
-                                    { onlineUsers.includes(user._id) ? "Online" : "Offline" }
+                                <div className='text-sm text-zinc-400 truncate'>
+                                    { user.isGroup 
+                                        ? <span className='text-xs italic'>Group</span> 
+                                        : (onlineUsers.includes(user._id) ? "Online" : "Offline") 
+                                    }
                                 </div>
                             </div>
                         </button>
@@ -71,11 +98,18 @@ function Sidebar() {
                 {
                     filteredUsers.length === 0 && (
                         <div className='text-center text-zinc-500 py-4'>
-                            No online users
+                            No conversations
                         </div>
                     )
                 }
             </div>
+
+            {isGroupModalOpen && (
+                <CreateGroupModal onClose={() => setIsGroupModalOpen(false)} />
+            )}
+            {isNewChatModalOpen && (
+                <NewChatModal onClose={() => setIsNewChatModalOpen(false)} />
+            )}
         </aside>
     )
 }
